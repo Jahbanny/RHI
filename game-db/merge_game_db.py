@@ -92,12 +92,21 @@ def load_submission(path: Path) -> list[dict]:
 def load_all_submissions(submissions_dir: Path) -> dict[tuple, list[dict]]:
     """
     Returns: {(name_lower, store_lower): [list of game dicts from each submission]}
-    Deduplicates by file content hash so the same data with a different filename
-    is never counted twice.
+    Deduplicates by file content hash so the same data counted more than once.
+    Hashes are persisted to seen_hashes.txt so deleting and re-adding a file
+    doesn't inflate vote counts across runs.
     """
     import hashlib
     all_games: dict[tuple, list[dict]] = collections.defaultdict(list)
+
+    # Load persisted hashes from previous runs
+    hashes_file = submissions_dir / "seen_hashes.txt"
     seen_hashes: set[str] = set()
+    if hashes_file.exists():
+        seen_hashes = set(hashes_file.read_text(encoding="utf-8").splitlines())
+
+    new_hashes: list[str] = []
+
     files = sorted(
         [p for p in submissions_dir.iterdir()
          if p.suffix.lower() in (".json", ".zip") and p.is_file()]
@@ -105,12 +114,12 @@ def load_all_submissions(submissions_dir: Path) -> dict[tuple, list[dict]]:
     print(f"Found {len(files)} submission file(s) in '{submissions_dir}'")
 
     for path in files:
-        # Deduplicate by MD5 of raw file content
         file_hash = hashlib.md5(path.read_bytes()).hexdigest()
         if file_hash in seen_hashes:
-            print(f"  Skipping duplicate: {path.name}")
+            print(f"  Skipping already-counted: {path.name}")
             continue
         seen_hashes.add(file_hash)
+        new_hashes.append(file_hash)
 
         print(f"  Loading: {path.name}")
         games = load_submission(path)
@@ -121,6 +130,12 @@ def load_all_submissions(submissions_dir: Path) -> dict[tuple, list[dict]]:
                 continue
             key = (name.lower(), store.lower())
             all_games[key].append(game)
+
+    # Persist any new hashes
+    if new_hashes:
+        with open(hashes_file, "a", encoding="utf-8") as f:
+            for h in new_hashes:
+                f.write(h + "\n")
 
     print(f"  → {len(all_games)} unique (name, store) combinations\n")
     return all_games

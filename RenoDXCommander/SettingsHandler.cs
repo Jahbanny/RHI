@@ -798,7 +798,7 @@ public class SettingsHandler
             var btn = sender as Button;
             if (btn != null) btn.IsEnabled = false;
 
-            string json = await Task.Run(() => BuildGameDataJson()).ConfigureAwait(false);
+            string json = await Task.Run(() => BuildGameDataJson());
 
             // Write to temp file and put on clipboard as a zip (same pattern as Copy Logs)
             var timestamp = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
@@ -944,7 +944,11 @@ public class SettingsHandler
         };
 
         return System.Text.Json.JsonSerializer.Serialize(export,
-            new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+            new System.Text.Json.JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+            });
     }
 
     public async void CopyLogsArchive_Click(object sender, RoutedEventArgs e)
