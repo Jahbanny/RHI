@@ -10,6 +10,7 @@
 
 ### Manifest Updates
 
+- Kingdom Come: Deliverance II added to 64-bit override list (PE scan was returning 32-bit incorrectly)
 - Re-enabled PCGamingWiki AppID lookup (`appid.php`) which was disabled in August 2026 due to a server migration outage. It is now confirmed working again. Existing URL cache will be cleared on next launch to allow fresh lookups via the faster AppID method.
 
 ---
