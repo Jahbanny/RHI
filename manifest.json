@@ -1434,6 +1434,14 @@
       "downloadUrl32": "https://github.com/OopyDoopy/renodx/releases/download/snapshot/renodx-upgrade.addon32",
       "downloadUrl64": "https://github.com/OopyDoopy/renodx/releases/download/snapshot/renodx-upgrade.addon64",
       "repositoryUrl": "https://github.com/OopyDoopy/renodx"
+    },
+    "reshade-screenshot-discord-fix": {
+      "packageName": "Discord HDR Screenshot Fix by Jahbanny",
+      "description": "Automatically strips the cICP chunk from HDR PNG screenshots to prevent washed-out colors in Discord.",
+      "downloadUrl32": "https://github.com/Jahbanny/reshade-screenshot-discord-fix/releases/latest/download/screenshot-discord-fix.addon32",
+      "downloadUrl64": "https://github.com/Jahbanny/reshade-screenshot-discord-fix/releases/latest/download/screenshot-discord-fix.addon64",
+      "repositoryUrl": "https://github.com/Jahbanny/reshade-screenshot-discord-fix",
+      "deployFileName": "screenshot-discord-fix"
     }
   },
   "renodxExtraSettings": [
